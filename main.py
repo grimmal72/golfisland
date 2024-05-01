@@ -1,6 +1,8 @@
+
 # type: ignore
 
 import random
+from endingSequence import endingSequence
 from objects import dickDastardly, GLaDOS, scoobyDoo, spiderMan, tweetyBird, yosemiteSam
 from objects import hauntedMansion, rollingHills, seaweedCove
 
@@ -9,8 +11,6 @@ courses = [rollingHills, seaweedCove, hauntedMansion]
 characters = [
     dickDastardly, GLaDOS, scoobyDoo, spiderMan, tweetyBird, yosemiteSam
 ]
-
-#characters: scooby doo, dick dastardly, fred flintstone, tweety bird, yosemite sam, and spider man
 
 print("GOLF ISLAND - A GAME BY JORDAN MALMGREN\n")
 
@@ -75,8 +75,6 @@ selectedCourse = selectCourse()
 
 print(f"You picked {selectedCourse.name}!\n")
 
-print("Pick your two opponents! Use the number key. Opponent 1:\n")
-
 
 def displayCharacters():
   for i in range(len(characters)):
@@ -107,18 +105,42 @@ def selectCharacter():
       continue
 
 
+print(
+    "Pick your player! Choose who you'd like to play as. Use the number key.\n"
+)
+
 displayCharacters()
+
+selectedUserCharacter = selectCharacter()
+
+print(
+    f"You selected {selectedUserCharacter.name}! You'll play as {selectedUserCharacter.name}."
+)
+
+print("Select who will be opponent 1.")
+
 selectedEnemyCharacter1 = selectCharacter()
+
+while True:
+  if (selectedUserCharacter == selectedEnemyCharacter1):
+    print(
+        "That character is already in use! You'll have to pick a different character"
+    )
+    selectedEnemyCharacter1 = selectCharacter()
+    continue
+  else:
+    break
 
 print(
     f"You selected {selectedEnemyCharacter1.name}! Opponent 1 will be {selectedEnemyCharacter1.name}! Now pick opponent 2!"
 )
 
-# I simply reuse the selectCharacter() function to prevent rewriting the whole thing from enemy 1 to enemy 2.
-
 selectedEnemyCharacter2 = selectCharacter()
+
 while True:
-  if (selectedEnemyCharacter1 == selectedEnemyCharacter2):
+  if (selectedEnemyCharacter2
+      == selectedEnemyCharacter1) or (selectedEnemyCharacter2
+                                      == selectedUserCharacter):
     print(
         "That character is already in use! You'll have to pick a different character"
     )
@@ -127,12 +149,18 @@ while True:
   else:
     break
 
+#The thirty or so lines above this are the last major revision I made to this code before going to sleep last night, April 28th 2024
+
 print(
     f"You selected {selectedEnemyCharacter2.name}! Opponent 2 will be {selectedEnemyCharacter2.name}!"
 )
 
 print(
     "You take a look around the green. A crowd cheers on the bleachers. A blimp passes by, and camera drones buzz around, filming the event. It's certainly a major festival. You look over at your competition.\n"
+)
+
+print(
+    f"Your opponents {selectedEnemyCharacter1.name} and {selectedEnemyCharacter2.name} stand in front of the tee.\n"
 )
 
 
@@ -151,6 +179,10 @@ randomEnemyQuote2ForStart()
 
 #As you can imagine, these two quote functions pull from the two above lists of potential enemy character phrases.
 
+players = [
+    selectedUserCharacter, selectedEnemyCharacter1, selectedEnemyCharacter2
+]
+
 windSpeed = random.randrange(0, 25)
 # According to my Googling, wind above 40mph is a gale, and 74mph is a hurricane, so I'm not going to go that high.
 
@@ -160,6 +192,8 @@ cardinalDirections_List = [
 ]
 
 windDirection = random.choice(cardinalDirections_List)
+
+# I may add in the direction that the hole points from the tee as a cardinal direction within the course objects, and then based on the wind speed it will affect the ball placement. But I'll come back to that later.
 
 if windSpeed == 0:
   print("There's no wind! Fantastic weather for a game!\n")
@@ -171,13 +205,3 @@ else:
 print(
     f"The hole is {selectedCourse.holedistance} feet away. Par is {selectedCourse.par}. You tee up.\n"
 )
-
-def endingSequence():
-  # This will trigger the counting of how many shots each person took.
-  return 0
-
-if anyBall == selectedCourse.holedistance:
-  endingSequence()
-  swingMagnitudeRange = random.randrange(0, int(selectedPlayerCharacter.swingpower))
-  #Golf swing randranges depend on the character. Some characters are overpowered, as a meme.
-  print(swingMagnitudeRange)
