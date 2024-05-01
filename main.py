@@ -1,4 +1,3 @@
-
 # type: ignore
 
 import random
@@ -205,3 +204,13 @@ else:
 print(
     f"The hole is {selectedCourse.holedistance} feet away. Par is {selectedCourse.par}. You tee up.\n"
 )
+
+def gameLoop(players, hole_distance):
+  allBallsInHole = False
+  while not allBallsInHole:
+    for player in players:
+      shotCycle(player, hole_distance)
+
+      # Check if all balls are in the hole
+      allBallsInHole = all(player.position == hole_distance for player in players)
+  # If all the characters' balls have reached the holes, the while not loop will be broken, and allBallsInHole will be permanently set to True, at least within the scope of the gameLoop function.
