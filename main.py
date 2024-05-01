@@ -1,6 +1,8 @@
 # type: ignore
 
 import random
+import time
+
 from endingSequence import endingSequence
 from objects import dickDastardly, GLaDOS, scoobyDoo, spiderMan, tweetyBird, yosemiteSam
 from objects import hauntedMansion, rollingHills, seaweedCove
@@ -205,6 +207,37 @@ print(
     f"The hole is {selectedCourse.holedistance} feet away. Par is {selectedCourse.par}. You tee up.\n"
 )
 
+
+def shotCycle(player, hole_distance):
+  if player.position == hole_distance:
+    # If the player has already reached the hole, ignore them
+    return
+  # Player takes a shot
+  swingMagnitude = random.randrange(0, int(player.swingpower))
+  # Update player's position based on the number recieved from the randrange.
+  print(f"{player.name} just struck the ball {str(swingMagnitude)} feet!")
+
+  # Pause to simulate turn
+  time.sleep(1)  # Adjust the time as needed
+
+  player.position += swingMagnitude
+  # Assuming a shot reduces the distance to the hole
+  # Check if the player has reached the hole
+
+  # Print current distance from hole
+  distance_to_hole = hole_distance - player.position
+  if distance_to_hole > 0:
+      print(f"{player.name} is {distance_to_hole} feet away from the hole.")
+  elif distance_to_hole == 0:
+      print(f"{player.name} has reached the hole!")
+  else:
+      print(f"{player.name} has overshot the hole by {-distance_to_hole} feet!")
+  
+    # You can trigger any necessary actions here when a player reaches the hole
+
+  # *this is the end of shotCycle*
+
+
 def gameLoop(players, hole_distance):
   allBallsInHole = False
   while not allBallsInHole:
@@ -212,5 +245,12 @@ def gameLoop(players, hole_distance):
       shotCycle(player, hole_distance)
 
       # Check if all balls are in the hole
-      allBallsInHole = all(player.position == hole_distance for player in players)
+      allBallsInHole = all(player.position == hole_distance
+                           for player in players)
   # If all the characters' balls have reached the holes, the while not loop will be broken, and allBallsInHole will be permanently set to True, at least within the scope of the gameLoop function.
+  endingSequence()
+
+  # *this is the end of gameLoop*
+
+
+gameLoop(players, selectedCourse.holedistance)
