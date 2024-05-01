@@ -21,7 +21,7 @@ hauntedMansion = Course(
 class Character:
 
   def __init__(self, name, swingstats, motive, franchise, startquote,
-               afterswingquote, endquote, swingpower):
+               afterswingquote, endquote, swingpower, position):
     self.name = name
     self.swingstats = swingstats
     self.motive = motive
@@ -30,6 +30,7 @@ class Character:
     self.afterswingquote = afterswingquote
     self.endquote = endquote
     self.swingpower = swingpower
+    self.position = position
 
 
 dickDastardly = Character(
@@ -41,7 +42,7 @@ dickDastardly = Character(
         "Dick Dastardly: Muttley, why are you snickering? I'm limber as a... Yow! My back! Drats... I can't swing! Argh... get me the cannon, boy! We'll shoot the ball from here!\n",
         "Dick Dastardly: Muttley, my boy, fetch me my lucky putter. We're going to win this cup fair or foul!\n",
         "Dick Dastardly: I'll show these amateurs how a true villain fairs in competition. Watch and learn, fools!\n"
-    ], [""], [""], "160")
+    ], [""], [""], "160", "0")
 
 tweetyBird = Character(
     "Tweety Bird", "Unknown", "Wants to make Sylvester the Cat jealous.",
@@ -50,7 +51,7 @@ tweetyBird = Character(
         "Yosemite Sam: Haha, little bird, how do you reckon you're going to swing that club, being, what, 4 inches tall? *BONK!* // Tweety Bird: What were you saying?",
         "Bugs Bunny: Ahhhh... Keep your chin up, doc. // Tweety Bird: *Takes out his shiny new golf club*",
         "Tweety Bird: Oh my, what a wuvwy day for a game of gowf."
-    ], [""], [""], "45")
+    ], [""], [""], "45", "0")
 
 scoobyDoo = Character(
     "Scooby Doo", "Unknown", "Money for Scooby Snacks",
@@ -60,7 +61,7 @@ scoobyDoo = Character(
         "Scooby Doo: Roinks! Was that a ghost?\n",
         "Scooby Doo: Ret's get ready to sink some raskets. Er, I mean... sring some shots!\n",
         "Velma: Scoob! You can't eat the golf ball!\n"
-    ], ["Shaggy: Zoinks! Watch out for that lake, Scoob!\n"], [""], "280")
+    ], ["Shaggy: Zoinks! Watch out for that lake, Scoob!\n"], [""], "280", "0")
 
 spiderMan = Character(
     "Spider-Man", "A break from heroics",
@@ -70,7 +71,7 @@ spiderMan = Character(
         "Spider-Man: I'll have you all stuck to your seats in awe. *poses for the camera*",
         "Spider-Man: Looks like we're about to swing into action. Aunt May, Uncle Ben, wish me luck.",
         "Spider-Man: Welcome to the Spider-Man Invitational. I could just swing from some trees and dunk the ball, but I'll go easy on you guys."
-    ], [""], [""], "600")
+    ], [""], [""], "600", "0")
 
 GLaDOS = Character(
     "GLaDOS",
@@ -79,7 +80,7 @@ GLaDOS = Character(
         "GLaDOS: Don't worry if you miss your shot. It's not like anyone will remember your performance anyway.",
         "GLaDOS: I hope you're enjoying this golf competition. It's not like you have much else to do with your meaningless existence.",
         "GLaDOS: Oh, how delightful, a group of mortals wiling away their limited time on Earth. Try to actually hit the ball."
-    ], [""], [""], "800")
+    ], [""], [""], "800", "0")
 
 yosemiteSam = Character(
     "Yosemite Sam",
@@ -93,4 +94,4 @@ yosemiteSam = Character(
     ], [
         "Yosemite Sam: Yeehaw! That ball's headin' straight for the hole like a bat outta Hell!",
         "Yosemite Sam: Git along, little ball, git along!"
-    ], [""], "250")
+    ], [""], "250", "0")
