@@ -29,6 +29,38 @@ def endingSequence(shots, par):
 shots = 4
 coursePar = 3
 result = endingSequence(shots, coursePar)
+'''
 print(result)
+'''
+
+
 
 # Note: this is imported but is not actually in use right now. I'll use it when I've written the game loop.
+
+
+
+
+
+
+
+
+# test area below
+
+'''
+
+selectedUserCharacter_score = golfScore(selectedUserCharacter_numofshots, coursePar)
+selectedEnemyCharacter1_score = golfScore(selectedEnemyCharacter1_numofshots, coursePar)
+selectedEnemyCharacter2_score = golfScore(selectedEnemyCharacter2_numofshots, coursePar)
+
+# Find the minimum score among the players
+minScoreBetweenPlayers = min(selectedUserCharacter_numofshots, selectedEnemyCharacter1_numofshots, selectedEnemyCharacter2_numofshots)
+
+# Determine which player had the minimum score
+if selectedUserCharacter_numofshots == min_score:
+    print("Congratulations to Player 1!")
+elif selectedEnemyCharacter1_numofshots == min_score:
+    print("Congratulations to Player 2!")
+else:
+    print("Congratulations to Player 3!")
+
+'''
