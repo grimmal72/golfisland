@@ -37,7 +37,7 @@ print(
 def displayCourses():
   for i in range(len(courses)):
     print(
-        f"{i + 1}.\n{courses[i].name}.\n{courses[i].holedistance} feet from start to finish.\n{courses[i].description}\n"
+        f"{i + 1}.\n{courses[i].name}.\n{str(courses[i].holedistance)} feet from start to finish.\n{courses[i].description}\n"
     )
 
 
@@ -204,8 +204,15 @@ else:
   )
 
 print(
-    f"The hole is {selectedCourse.holedistance} feet away. Par is {selectedCourse.par}. You tee up.\n"
+    f"The hole is {str(selectedCourse.holedistance)} feet away. Par is {selectedCourse.par}. You tee up.\n"
 )
+
+zone1 = " "
+zone2 = " "
+zone3 = " "
+zone4 = " "
+zones = [zone1, zone2, zone3, zone4]
+currentZone = zone1
 
 
 def shotCycle(player, hole_distance):
@@ -218,22 +225,62 @@ def shotCycle(player, hole_distance):
   print(f"{player.name} just struck the ball {str(swingMagnitude)} feet!")
 
   # Pause to simulate turn
-  time.sleep(1)  # Adjust the time as needed
+  time.sleep(0)  # Adjust the time as needed
 
-  player.position += swingMagnitude
-  # Assuming a shot reduces the distance to the hole
-  # Check if the player has reached the hole
+  #Save player position before the swing, so we can reference it if we sink the ball by accident
+  lastSavedPlayerPosition = player.position
 
-  # Print current distance from hole
-  distance_to_hole = hole_distance - player.position
-  if distance_to_hole > 0:
-      print(f"{player.name} is {distance_to_hole} feet away from the hole.")
-  elif distance_to_hole == 0:
-      print(f"{player.name} has reached the hole!")
+  # Whether or not we're shooting towards the hole, adding to them sum, or shooting down towards the hole, subtracting from the total.
+  if (player.position < hole_distance):
+    player.position += swingMagnitude
+  elif (player.position > hole_distance):
+    player.position -= swingMagnitude
   else:
-      print(f"{player.name} has overshot the hole by {-distance_to_hole} feet!")
-  
-    # You can trigger any necessary actions here when a player reaches the hole
+    return None
+
+  # Chance of ball falling in lake
+  def isBallInLake():
+    probability = 1
+    if random.randrange(0, 10) < probability:
+      print(
+          "Uh oh! The ball fell in a lake! They'll have to shoot from where they were last positioned."
+      )
+      player.position = lastSavedPlayerPosition
+    else:
+      return None
+
+  isBallInLake()
+
+  if player.position >= (hole_distance -
+                         hole_distance) and player.position <= (hole_distance *
+                                                                0.25):
+    currentZone = zone1
+  elif player.position > (hole_distance *
+                          0.25) and player.position <= (hole_distance * 0.5):
+    currentZone = zone2
+  elif player.position > (hole_distance *
+                          0.5) and player.position <= (hole_distance * 0.75):
+    currentZone = zone3
+  else:
+    currentZone = zone4
+  # This divides the golf course into four quadrants. I have made sure that each course's hole_distance is divisible by four for this reason.
+
+  driver = " "
+  iron = " "
+  wedge = " "
+  putter = " "
+  clubs = [driver, iron, wedge, putter]
+
+  # Check if the player has reached the hole, or print current distance from hole, or print how much they overshot it by.
+  feetRemaining = hole_distance - player.position
+  if feetRemaining > 0:
+    print(f"{player.name} is {feetRemaining} feet away from the hole.")
+  elif feetRemaining == 0:
+    print(f"{player.name} has reached the hole!")
+  else:
+    print(f"{player.name} has overshot the hole by {feetRemaining} feet!")
+
+  # You can trigger any necessary actions here when a player reaches the hole
 
   # *this is the end of shotCycle*
 
@@ -254,3 +301,9 @@ def gameLoop(players, hole_distance):
 
 
 gameLoop(players, selectedCourse.holedistance)
+
+# May 1st: Notes for next time I code this. I was last working on the integration of clubs. I think the zone concept is going somewhere, but they currently have no affect when I run the code. Soon, I want to make it so that being in a certain zone makes it so that you switch to a certain club. I want to start with the driver club, and then switch to one of the other clubs depending on the zone.
+# It's almost finished, sort of. Once the zones are figured out, it will make it so that the swingpower is blunted to fractional levels, and it will be far less hard for a character to win. It currently takes probably 100,000 loops (no exaggeration) for the game to end. I've only seen it end because I've turned off the time limiter before.
+# Some features I still want to add are pausing every time it's the user's turn, making it so the user plays by inputting a number to try to beat the randrange (this also pauses the annoying automatic unstoppable loop that currently happens). Depending on the distance from the randrange, your power will be better or worse. (think mario golf)
+# i want wind to slightly affect the swingMagnitude, i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want characters to say things most of the time after a shot, i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
+# lastly, i just need to polish the endingSequence(), which will be pretty easy. I'll leave that for the end.
