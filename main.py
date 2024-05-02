@@ -214,11 +214,53 @@ zone4 = " "
 zones = [zone1, zone2, zone3, zone4]
 currentZone = zone1
 
+driver = 1
+iron = 0.75
+wedge = 0.5
+putter = 0.2
+clubs = [driver, iron, wedge, putter]
+currentClub = driver
+
 
 def shotCycle(player, hole_distance):
   if player.position == hole_distance:
     # If the player has already reached the hole, ignore them
     return
+
+  # The next three conditional blocks are used to check what zone we're in and what club we're using. The reason I get that sorted before taking a swing is so that we pick the right club for the current position BEFORE swinging each time, instead of after, which wouldn't make much sense.
+  
+  if player.position >= (hole_distance -
+                         hole_distance) and player.position <= (hole_distance *
+                                                                0.25):
+    currentZone = zone1
+  elif player.position > (hole_distance *
+                          0.25) and player.position <= (hole_distance * 0.5):
+    currentZone = zone2
+  elif player.position > (hole_distance *
+                          0.5) and player.position <= (hole_distance * 0.75):
+    currentZone = zone3
+  else:
+    currentZone = zone4
+  # This divides the golf course into four quadrants. I have made sure that each course's hole_distance is divisible by four for this reason.
+
+  if currentZone == zone1:
+    currentClub = driver
+  elif currentZone == zone2:
+    currentClub = iron
+  elif currentZone == zone3:
+    currentClub = wedge
+  else:
+    currentClub = putter
+
+  if currentClub == driver:
+    player.swingpower *= driver
+  elif currentClub == iron:
+    player.swingpower *= iron
+  elif currentClub == wedge:
+    player.swingpower *= wedge
+  else:
+    player.swingpower *= putter
+
   # Player takes a shot
   swingMagnitude = random.randrange(0, int(player.swingpower))
   # Update player's position based on the number recieved from the randrange.
@@ -238,6 +280,9 @@ def shotCycle(player, hole_distance):
   else:
     return None
 
+  # Each character's number of shots starts at 0, but after a shot, it goes up by one. If the ball goes in the lake, it still goes up by one. This is the only line of code we need to do this.
+  player.numofshots += 1
+  
   # Chance of ball falling in lake
   def isBallInLake():
     probability = 1
@@ -251,26 +296,6 @@ def shotCycle(player, hole_distance):
 
   isBallInLake()
 
-  if player.position >= (hole_distance -
-                         hole_distance) and player.position <= (hole_distance *
-                                                                0.25):
-    currentZone = zone1
-  elif player.position > (hole_distance *
-                          0.25) and player.position <= (hole_distance * 0.5):
-    currentZone = zone2
-  elif player.position > (hole_distance *
-                          0.5) and player.position <= (hole_distance * 0.75):
-    currentZone = zone3
-  else:
-    currentZone = zone4
-  # This divides the golf course into four quadrants. I have made sure that each course's hole_distance is divisible by four for this reason.
-
-  driver = " "
-  iron = " "
-  wedge = " "
-  putter = " "
-  clubs = [driver, iron, wedge, putter]
-
   # Check if the player has reached the hole, or print current distance from hole, or print how much they overshot it by.
   feetRemaining = hole_distance - player.position
   if feetRemaining > 0:
@@ -278,11 +303,20 @@ def shotCycle(player, hole_distance):
   elif feetRemaining == 0:
     print(f"{player.name} has reached the hole!")
   else:
-    print(f"{player.name} has overshot the hole by {feetRemaining} feet!")
+    print(f"{player.name} has overshot the hole by {-feetRemaining} feet!")
 
   # You can trigger any necessary actions here when a player reaches the hole
 
-  # *this is the end of shotCycle*
+def afterSwingSpeakChance():
+  probability = 1
+  if random.randrange(0, 10) < probability:
+    print(f"{player.afterswingquote}")
+  else:
+    return None
+
+afterSwingSpeakChance()
+
+# *this is the end of shotCycle*
 
 
 def gameLoop(players, hole_distance):
