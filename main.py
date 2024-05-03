@@ -3,7 +3,6 @@
 import random
 import time
 
-from endingSequence import endingSequence
 from objects import dickDastardly, GLaDOS, scoobyDoo, spiderMan, tweetyBird, yosemiteSam
 from objects import hauntedMansion, rollingHills, seaweedCove
 
@@ -204,8 +203,79 @@ else:
   )
 
 print(
-    f"The hole is {str(selectedCourse.holedistance)} feet away. Par is {selectedCourse.par}. You tee up.\n"
+    f"The hole is {str(selectedCourse.holedistance)} feet away. Par is {str(selectedCourse.par)}. You tee up.\n"
 )
+
+
+def endingSequence(players):
+  scoreNames = [
+      "Hole-in-one!", "Albatross.", "Eagle.", "Birdie.", "Par.", "Bogey.",
+      "Double Bogey...", "Triple Bogey...",
+      "Worse than Triple Bogey... Basically, really bad!"
+  ]
+
+  def golfScore(shots, par):
+    if shots == 1:
+      return scoreNames[0]
+    elif shots == par - 3:
+      return scoreNames[1]
+    elif shots == par - 2:
+      return scoreNames[2]
+    elif shots == par - 1:
+      return scoreNames[3]
+    elif shots == par:
+      return scoreNames[4]
+    elif shots == par + 1:
+      return scoreNames[5]
+    elif shots == par + 2:
+      return scoreNames[6]
+    elif shots == par + 3:
+      return scoreNames[7]
+    else:
+      return scoreNames[8]
+
+  # Initialize an empty list to store the fancyScoreWord for each player
+  fancyScoreWords = []
+
+  for player in players:
+    player.fancyscoreword = golfScore(player.numofshots, selectedCourse.par)
+    fancyScoreWords.append(player.fancyscoreword)
+
+  # Determine the player(s) with the best score
+  best_score = min(player.numofshots
+                   for player in players)  # Find the minimum score
+
+  
+  
+  winningPlayers = []  # Create an empty list to store the winners
+
+  # Check each player's score
+  for player in players:
+    if player.numofshots == best_score:  # If player's score matches the best score
+      winningPlayers.append(player)  # Add them to the list of winners
+
+  # Check if there's a single winner or a tie
+  if len(winningPlayers) == 1:
+    print("Congratulations to the winner!")
+    # Say who the single winner is and let them speak their endquote.
+    print(f"Player {winningPlayers[0].name} is the champion!")
+    if winningPlayers[0].name == dickDastardly.name:
+      print(f"{dickDastardly.endquote}")
+    elif winningPlayers[0].name == GLaDOS.name:
+      print(f"{GLaDOS.endquote}")
+    elif winningPlayers[0].name == scoobyDoo.name:
+      print(f"{scoobyDoo.endquote}")
+    elif winningPlayers[0].name == spiderMan.name:
+      print(f"{spiderMan.endquote}")
+    elif winningPlayers[0].name == spiderMan.name:
+      print(f"{spiderMan.endquote}")
+    elif winningPlayers[0].name == spiderMan.name:
+      print(f"{spiderMan.endquote}")
+  else:
+    print("It's a tie between:")
+    for p in winningPlayers:
+      print(f"Player {p.name} is tied for the win!")
+
 
 zone1 = " "
 zone2 = " "
@@ -228,7 +298,7 @@ def shotCycle(player, hole_distance):
     return
 
   # The next three conditional blocks are used to check what zone we're in and what club we're using. The reason I get that sorted before taking a swing is so that we pick the right club for the current position BEFORE swinging each time, instead of after, which wouldn't make much sense.
-  
+
   if player.position >= (hole_distance -
                          hole_distance) and player.position <= (hole_distance *
                                                                 0.25):
@@ -282,7 +352,7 @@ def shotCycle(player, hole_distance):
 
   # Each character's number of shots starts at 0, but after a shot, it goes up by one. If the ball goes in the lake, it still goes up by one. This is the only line of code we need to do this.
   player.numofshots += 1
-  
+
   # Chance of ball falling in lake
   def isBallInLake():
     probability = 1
@@ -307,12 +377,14 @@ def shotCycle(player, hole_distance):
 
   # You can trigger any necessary actions here when a player reaches the hole
 
+
 def afterSwingSpeakChance():
   probability = 1
   if random.randrange(0, 10) < probability:
     print(f"{player.afterswingquote}")
   else:
     return None
+
 
 afterSwingSpeakChance()
 
@@ -329,15 +401,14 @@ def gameLoop(players, hole_distance):
       allBallsInHole = all(player.position == hole_distance
                            for player in players)
   # If all the characters' balls have reached the holes, the while not loop will be broken, and allBallsInHole will be permanently set to True, at least within the scope of the gameLoop function.
-  endingSequence()
+  endingSequence(players)
 
   # *this is the end of gameLoop*
 
 
 gameLoop(players, selectedCourse.holedistance)
 
-# May 1st: Notes for next time I code this. I was last working on the integration of clubs. I think the zone concept is going somewhere, but they currently have no affect when I run the code. Soon, I want to make it so that being in a certain zone makes it so that you switch to a certain club. I want to start with the driver club, and then switch to one of the other clubs depending on the zone.
-# It's almost finished, sort of. Once the zones are figured out, it will make it so that the swingpower is blunted to fractional levels, and it will be far less hard for a character to win. It currently takes probably 100,000 loops (no exaggeration) for the game to end. I've only seen it end because I've turned off the time limiter before.
+# May 2nd: Notes for next time I code this.
 # Some features I still want to add are pausing every time it's the user's turn, making it so the user plays by inputting a number to try to beat the randrange (this also pauses the annoying automatic unstoppable loop that currently happens). Depending on the distance from the randrange, your power will be better or worse. (think mario golf)
-# i want wind to slightly affect the swingMagnitude, i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want characters to say things most of the time after a shot, i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
+# i want wind to slightly affect the swingMagnitude, i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
 # lastly, i just need to polish the endingSequence(), which will be pretty easy. I'll leave that for the end.
