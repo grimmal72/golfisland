@@ -244,9 +244,21 @@ def endingSequence(players):
   # Determine the player(s) with the best score
   best_score = min(player.numofshots
                    for player in players)  # Find the minimum score
+  second_best_score = sorted(set(
+      player.numofshots
+      for player in players))[1]  # Find the second best score
+  third_best_score = sorted(set(player.numofshots for player in players))[2]
+  # Find the third best score
 
-  
-  
+  # The above three variables contain the numofshots attributes of the winning players, but we actually can't tell who the players even are. Below this comment is a way to make it clear who the player was who was in which place. Eg. 1st, 2nd, 3rd.
+  for player in players:
+    if player.numofshots == best_score:
+      bestScorePlayer = player
+    elif player.numofshots == second_best_score:
+      secondBestScorePlayer = player
+    elif player.numofshots == third_best_score:
+      thirdBestScorePlayer = player
+
   winningPlayers = []  # Create an empty list to store the winners
 
   # Check each player's score
@@ -258,7 +270,9 @@ def endingSequence(players):
   if len(winningPlayers) == 1:
     print("Congratulations to the winner!")
     # Say who the single winner is and let them speak their endquote.
-    print(f"Player {winningPlayers[0].name} is the champion!")
+    print(
+        f"Player {winningPlayers[0].name} is the champion with {bestScorePlayer.numofshots} shots!"
+    )
     if winningPlayers[0].name == dickDastardly.name:
       print(f"{dickDastardly.endquote}")
     elif winningPlayers[0].name == GLaDOS.name:
@@ -267,14 +281,23 @@ def endingSequence(players):
       print(f"{scoobyDoo.endquote}")
     elif winningPlayers[0].name == spiderMan.name:
       print(f"{spiderMan.endquote}")
-    elif winningPlayers[0].name == spiderMan.name:
-      print(f"{spiderMan.endquote}")
-    elif winningPlayers[0].name == spiderMan.name:
-      print(f"{spiderMan.endquote}")
+    elif winningPlayers[0].name == tweetyBird.name:
+      print(f"{tweetyBird.endquote}")
+    elif winningPlayers[0].name == yosemiteSam.name:
+      print(f"{yosemiteSam.endquote}")
+
+    print(
+        f"In second place is {secondBestScorePlayer.name} with {secondBestScorePlayer.numofshots} shots."
+    )
+    print(
+        f"In third place is {thirdBestScorePlayer.name} with {thirdBestScorePlayer.numofshots} shots."
+    )
+
   else:
     print("It's a tie between:")
     for p in winningPlayers:
       print(f"Player {p.name} is tied for the win!")
+      print(f"In third place is {third_best_score}")
 
 
 zone1 = " "
@@ -408,7 +431,10 @@ def gameLoop(players, hole_distance):
 
 gameLoop(players, selectedCourse.holedistance)
 
-# May 2nd: Notes for next time I code this.
+# May 3rd: Notes for next time I code this.
 # Some features I still want to add are pausing every time it's the user's turn, making it so the user plays by inputting a number to try to beat the randrange (this also pauses the annoying automatic unstoppable loop that currently happens). Depending on the distance from the randrange, your power will be better or worse. (think mario golf)
 # i want wind to slightly affect the swingMagnitude, i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
-# lastly, i just need to polish the endingSequence(), which will be pretty easy. I'll leave that for the end.
+# lastly, i just need to add the 2nd and third quotes to endingSequence().
+# I may add \n to every sentence in the program.
+# Lastly, something needs to be done about the zones. Maybe instead of 4 clubs for 4 zones, there can be 10 zones with 10 clubs, or 20 zones with 20 clubs. And I may institute a variable called powerGradient, where the weak clubs aren't nerfed as bad for the weak characters, and the strong clubs aren't as overpowered for the strong characters.
+# The problem is that par should be like 7, but these characters are legitimately having 5000 shot games, which is unreasonable.
