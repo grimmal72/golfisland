@@ -1,5 +1,6 @@
 # type: ignore
 
+import math
 import random
 import time
 
@@ -193,13 +194,15 @@ cardinalDirections_List = [
 
 windDirection = random.choice(cardinalDirections_List)
 
+holeDirection = selectedCourse.holedirectionfromtee
+
 # I may add in the direction that the hole points from the tee as a cardinal direction within the course objects, and then based on the wind speed it will affect the ball placement. But I'll come back to that later.
 
 if windSpeed == 0:
   print("There's no wind! Fantastic weather for a game!\n")
 else:
   print(
-      f"The wind is moving at {windSpeed} miles per hour, {windDirection.lower()}. \n"
+      f"The wind is moving at {windSpeed} miles per hour, {windDirection.lower()}. The hole is {selectedCourse.holedirectionfromtee.lower()} of the tee. \n"
   )
 
 print(
@@ -207,11 +210,51 @@ print(
 )
 
 
+# Calculate the angle between two cardinal directions
+def calculateAngle(direction1, direction2):
+  directions = cardinalDirections_List
+  angle = (directions.index(direction1) - directions.index(direction2)) * 45
+  if angle > 180:
+    angle -= 360
+  elif angle < -180:
+    angle += 360
+  return angle
+
+
+# Calculates the angle between windDirection and holeDirection
+angle = calculateAngle(windDirection, holeDirection)
+
+# Determine swing magnitude adjustment based on angle
+if angle == 0:
+  swingAdjustment = 1  # No adjustment if wind and hole direction are the same
+elif angle == 180 or angle == -180:
+  swingAdjustment = -1  # Detract from swing if wind and hole direction are opposite
+elif abs(angle) < 90:
+  swingAdjustment = 1 - abs(
+      angle) / 90  # Boost or detract slightly based on angle
+else:
+  swingAdjustment = -(abs(angle) -
+                      90) / 90  # Boost or detract slightly based on angle
+
+# Apply wind speed to swing magnitude adjustment
+# The randrange was 0 to 25, but we want swingAdjustment to be 0 to 1 and potentially negative.
+swingAdjustment *= windSpeed / 25
+
+# How this works is a swingMagnitude multiplied by one is a normal swing. swingAdjustment can be negative, and can cause us to be blunting our swing with something like a 0.78 * swingMagnitude that slightly dulls the swing. Alternatively, you can have like a 1.98 * swingMagnitude that almost doubles the power of the swing. But it can go no lower than a swingMagnitudeMultiplier of 0 and no higher than a swingMagnitudeMultiplier of 2.
+swingMagnitudeMultiplier = 1 + swingAdjustment
+
+swingMagnitudeMultiplier = round(swingMagnitudeMultiplier * 10000) / 10000
+
+print(
+    f"Due to the wind, your swing multiplier is: {str(swingMagnitudeMultiplier)}x."
+)
+# I was getting numbers like 0.040000000000000036x in the above print statement which is why I instituted the rounding function above it.
+
 def endingSequence(players):
   scoreNames = [
       "Hole-in-one!", "Albatross.", "Eagle.", "Birdie.", "Par.", "Bogey.",
       "Double Bogey...", "Triple Bogey...",
-      "Worse than Triple Bogey... Basically, really bad!"
+      "Worse than Triple Bogey... Basically, really bad! But hey, at least they still won!"
   ]
 
   def golfScore(shots, par):
@@ -300,20 +343,24 @@ def endingSequence(players):
       print(f"In third place is {third_best_score}")
 
 
-zone1 = " "
-zone2 = " "
-zone3 = " "
-zone4 = " "
-zones = [zone1, zone2, zone3, zone4]
+zone1 = "zone1"
+zone2 = "zone2"
+zone3 = "zone3"
+zone4 = "zone4"
+zone5 = "zone5"
+zone6 = "zone6"
+zones = [zone1, zone2, zone3, zone4, zone5, zone6]
 currentZone = zone1
 
-driver = 1
-iron = 0.75
-wedge = 0.5
-putter = 0.2
-clubs = [driver, iron, wedge, putter]
+driver = 1.3
+threewood = 0.8
+iron = 0.5
+wedge = 0.25
+putter = 0.1
+putterwithin10ft = 0.01
+clubs = [driver, threewood, iron, wedge, putter, putterwithin10ft]
 currentClub = driver
-
+# Since this line is never revisited, it isn't an issue that we are seting currentClub to driver, as it will just be reassigned later.
 
 def shotCycle(player, hole_distance):
   if player.position == hole_distance:
@@ -322,57 +369,88 @@ def shotCycle(player, hole_distance):
 
   # The next three conditional blocks are used to check what zone we're in and what club we're using. The reason I get that sorted before taking a swing is so that we pick the right club for the current position BEFORE swinging each time, instead of after, which wouldn't make much sense.
 
-  if player.position >= (hole_distance -
-                         hole_distance) and player.position <= (hole_distance *
-                                                                0.25):
+  if player.position >= 0 and player.position <= (hole_distance *
+                                                                0.30):
     currentZone = zone1
   elif player.position > (hole_distance *
-                          0.25) and player.position <= (hole_distance * 0.5):
+                          0.30) and player.position <= (hole_distance * 0.50):
     currentZone = zone2
   elif player.position > (hole_distance *
-                          0.5) and player.position <= (hole_distance * 0.75):
+                          0.50) and player.position <= (hole_distance * 0.70):
     currentZone = zone3
-  else:
+  elif player.position > (hole_distance *
+                        0.70) and player.position <= (hole_distance * 0.85):
     currentZone = zone4
-  # This divides the golf course into four quadrants. I have made sure that each course's hole_distance is divisible by four for this reason.
+  elif player.position > (hole_distance - 10) and player.position < (hole_distance + 10):
+    currentZone = zone6
+  else:
+    currentZone = zone5
 
   if currentZone == zone1:
     currentClub = driver
   elif currentZone == zone2:
-    currentClub = iron
+    currentClub = threewood
   elif currentZone == zone3:
+    currentClub = iron
+  elif currentZone == zone4:
     currentClub = wedge
-  else:
+  elif currentZone == zone5:
     currentClub = putter
-
-  if currentClub == driver:
-    player.swingpower *= driver
-  elif currentClub == iron:
-    player.swingpower *= iron
-  elif currentClub == wedge:
-    player.swingpower *= wedge
   else:
-    player.swingpower *= putter
+    currentClub = putterwithin10ft
+
+  swingPowerBasedOnClub = player.swingpower # Despite the finality that this line seems to have, the variable is about to have a different value.
+  # By the way, the reason I use this variable instead of player.swingpower is that with player.swingpower it was taking the assigned multiplied value into the next loop, after which it would multiply to be even bigger the next turn, growing or shrinking exponentially.
+  
+  if currentClub == driver:
+    swingPowerBasedOnClub *= driver
+  elif currentClub == threewood:
+    swingPowerBasedOnClub *= threewood
+  elif currentClub == iron:
+    swingPowerBasedOnClub *= iron
+  elif currentClub == wedge:
+    swingPowerBasedOnClub *= wedge
+  elif currentClub == putter:
+    swingPowerBasedOnClub *= putter
+  else:
+    swingPowerBasedOnClub *= putterwithin10ft
 
   # Player takes a shot
-  swingMagnitude = random.randrange(0, int(player.swingpower))
+  if player == selectedUserCharacter:  # If it's the user's turn
+    while True: # Loop doesn't end until you properly input a number key
+      try:
+        swingMagnitude = " "
+        swingMagnitudeInput = int(input(f"Enter your shot with the number key: "))
+        if 1 <= swingMagnitudeInput <= 25:
+          swingMagnitude = swingMagnitudeInput * int(swingPowerBasedOnClub)
+          break
+        else:
+          print("Select a number key from 1 to 25.")
+          continue
+      except ValueError:
+        print("Invalid input. Please enter a number using the number key.\n")
+        continue
+  else:
+    swingMagnitude = random.randrange(1, int(swingPowerBasedOnClub))
+
   # Update player's position based on the number recieved from the randrange.
   print(f"{player.name} just struck the ball {str(swingMagnitude)} feet!")
-
+  print(f"They are in {currentZone}. They've currently equipped the {currentClub}.")
   # Pause to simulate turn
   time.sleep(0)  # Adjust the time as needed
 
-  #Save player position before the swing, so we can reference it if we sink the ball by accident
+  # Save player position before the swing, so we can reference it if we sink the ball by accident
   lastSavedPlayerPosition = player.position
 
   # Whether or not we're shooting towards the hole, adding to them sum, or shooting down towards the hole, subtracting from the total.
+  #swingMagnitudeMultiplier was defined based on the wind, that's it.
   if (player.position < hole_distance):
-    player.position += swingMagnitude
-  elif (player.position > hole_distance):
-    player.position -= swingMagnitude
-  else:
-    return None
+    player.position += math.ceil(swingMagnitude * swingMagnitudeMultiplier)
+  else: #  (player.position > hole_distance)
+    player.position -= math.ceil(swingMagnitude * swingMagnitudeMultiplier)
 
+  # I believe that the ceil function is being used such that it will be impossible to get the number 0 as a swing. I use ceil to have round numbers. But there was a time when I was getting infinite zero shots because the putter shots kept flooring to zero. That's why I'm not using floor.
+  
   # Each character's number of shots starts at 0, but after a shot, it goes up by one. If the ball goes in the lake, it still goes up by one. This is the only line of code we need to do this.
   player.numofshots += 1
 
@@ -396,22 +474,20 @@ def shotCycle(player, hole_distance):
   elif feetRemaining == 0:
     print(f"{player.name} has reached the hole!")
   else:
-    print(f"{player.name} has overshot the hole by {-feetRemaining} feet!")
+    print(f"{player.name}'s ball is {-feetRemaining} feet further than the hole! They'll need to backtrack a bit.")
 
   # You can trigger any necessary actions here when a player reaches the hole
-
-
-def afterSwingSpeakChance():
-  probability = 1
-  if random.randrange(0, 10) < probability:
-    print(f"{player.afterswingquote}")
-  else:
-    return None
-
-
-afterSwingSpeakChance()
-
-# *this is the end of shotCycle*
+  
+  def afterSwingSpeakChance(player):
+    probability = 1
+    if random.randrange(0, 10) < probability:
+      afterSwingQuote = random.choice(player.afterswingquote)
+      print(f"{afterSwingQuote}")
+    else:
+      return None
+  
+  afterSwingSpeakChance(player)
+  # *this is the end of shotCycle*
 
 
 def gameLoop(players, hole_distance):
@@ -432,9 +508,9 @@ def gameLoop(players, hole_distance):
 gameLoop(players, selectedCourse.holedistance)
 
 # May 3rd: Notes for next time I code this.
-# Some features I still want to add are pausing every time it's the user's turn, making it so the user plays by inputting a number to try to beat the randrange (this also pauses the annoying automatic unstoppable loop that currently happens). Depending on the distance from the randrange, your power will be better or worse. (think mario golf)
-# i want wind to slightly affect the swingMagnitude, i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
+# Some features I still want to add are i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
 # lastly, i just need to add the 2nd and third quotes to endingSequence().
 # I may add \n to every sentence in the program.
 # Lastly, something needs to be done about the zones. Maybe instead of 4 clubs for 4 zones, there can be 10 zones with 10 clubs, or 20 zones with 20 clubs. And I may institute a variable called powerGradient, where the weak clubs aren't nerfed as bad for the weak characters, and the strong clubs aren't as overpowered for the strong characters.
 # The problem is that par should be like 7, but these characters are legitimately having 5000 shot games, which is unreasonable.
+
