@@ -4,8 +4,150 @@ import math
 import random
 import time
 
-from objects import dickDastardly, GLaDOS, scoobyDoo, spiderMan, tweetyBird, yosemiteSam
-from objects import hauntedMansion, rollingHills, seaweedCove
+
+class Course:
+
+  def __init__(self, name, holedistance, description, par,
+               holedirectionfromtee):
+    self.name = name
+    self.holedistance = holedistance
+    self.description = description
+    self.par = par
+    self.holedirectionfromtee = holedirectionfromtee
+
+
+rollingHills = Course("Rolling Hills", 804, "A very hilly golf course.", 18,
+                      "East")
+
+seaweedCove = Course("Seaweed Cove", 1020, "Watery.", 21, "North")
+
+hauntedMansion = Course(
+    "Haunted Mansion", 948,
+    "Whose idea was it to turn a kilometer long mansion into a golf course?!",
+    16, "South")
+
+
+class Character:
+
+  def __init__(self, name, numofshots, swingstats, motive, franchise,
+               swingpower, position, fancyscoreword, startquote,
+               afterswingquote, end1stquote, end2ndquote, end3rdquote, inrough):
+    self.name = name
+    self.numofshots = numofshots
+    self.swingstats = swingstats
+    self.motive = motive
+    self.franchise = franchise
+    self.swingpower = swingpower
+    self.position = position
+    self.fancyscoreword = fancyscoreword
+    self.startquote = startquote
+    self.afterswingquote = afterswingquote
+    self.end1stquote = end1stquote
+    self.end2ndquote = end2ndquote
+    self.end3rdquote = end3rdquote
+    self.inrough = inrough
+
+
+dickDastardly = Character(
+    "Dick Dastardly", 0,
+    "Uses cannons, magnets, and other nefarious tricks to attempt victory.",
+    "To melt the gold cup and sell its precious metal.", "Wacky Races", 250, 0,
+    " ", [
+        "Dick Dastardly: Hahahaha! Maybe I can set a booby trap to funnel the ball underground towards the hole! Then I'll win for sure! Oop... Drats... the ref's watching.\n",
+        "Muttley: *Evil laugh* // Dick Dastardly: Haha, that's right, Muttley, if we win this tournament, we'll melt the cup down and be rich!\n",
+        "Dick Dastardly: Can I bring my car on the course? *whispers* Muttley, get me the car. I'll drive the ball and get a hole in one. Drive! Get it? Hahahahahahahaha.\n",
+        "Dick Dastardly: Muttley, my boy, fetch me my lucky putter. We're going to win this cup fair or foul!\n",
+        "Dick Dastardly: I'll show these amateurs how a true villain fairs in competition. Watch and learn, fools!\n"
+    ], [
+        "Dick Dastardly: Yow! My back! Drats... I can't swing! Argh... get me the cannon, Muttley! We'll shoot the ball from here!\n",
+        "Dick Dastardly: Hahahaha! See you dumb dumbs at the finish line!\n",
+        "Dick Dastardly: Hahaha! Little do they know my ball is magnetic, and I've installed a supermagnet in the hole!\n",
+        "Dick Dastardly: Muttley, get me my jet-powered club!\n"
+    ],
+    "Dick Dastardly: Hahaha! We did it Muttley! We beat these fools, the gold is ours! We'll be rich!\n",
+    "Dick Dastardly: Hmmm... I can still sell the silver cup for money... Hahahahaha!! Next year I'll win this cup for sure!",
+    "Dick Dastardly: Drats!", False)
+
+tweetyBird = Character(
+    "Tweety Bird", 0, "A bit on the weaker side.",
+    "Wants to make Sylvester the Cat jealous.", "Looney Tunes", 240, 0, " ", [
+        "Tweety Bird: Did I just see a puddy tat?\n",
+        "Yosemite Sam: Haha, little bird, how do you reckon you're going to swing that club, being, what, 4 inches tall? *BONK!* // Tweety Bird: What were you saying?\n",
+        "Bugs Bunny: Ahhhh... Keep your chin up, doc. // Tweety Bird: *Takes out his shiny new golf club*\n",
+        "Tweety Bird: Oh my, what a wuvwy day for a game of gowf.\n"
+    ], [
+        "Tweety Bird: Ooh, is that a worm? *gobble* I should have brought birdseed.\n",
+        "Tweety Bird: I may be wittle, but I pack a bwig swing!\n",
+        "Tweety Bird: Dis game is fun! I wike chasing the baww!\n"
+    ], "Tweety Bird: I won! I won! I'm a wittle biwd but I won!\n",
+    "Sylvester the Cat: *snicker *snicker* *snicker* *snicker* // Tweety Bird: Alwight, waugh it up, buster.\n",
+    "Tweety Bird: AHHHHHHH!! THAT PUDDY TAT'S AFTER ME!!\n", False)
+
+scoobyDoo = Character(
+    "Scooby Doo", 0, "He's a dog. He has decent swinging strength for a dog.",
+    "Money for Scooby Snacks", "Scooby Doo by Hanna Barbera", 280, 0, " ", [
+        "Scooby Doo: Ruh roh Raggy! How many shots is ris course?\n",
+        "Scooby Doo: Reah Raggy, rou're right, ris course is rearry rough. But I'll try my best!\n",
+        "Scooby Doo: Roinks! Was that a ghost?\n",
+        "Scooby Doo: Ret's get ready to sink some raskets. Er, I mean... sring some shots!\n",
+        "Velma: Scoob! You can't eat the golf ball!\n"
+    ], [
+        "Shaggy: Zoinks! Watch out for that lake, Scoob!\n",
+        "Scooby Doo: Rooby-Dooby-Doo!!\n"
+    ], "Scooby Doo: Ranybody want a Rooby Snack?\n",
+    "Scooby Doo: Dooby Dooby Doo!", "Scooby Doo: Ruh roh...\n", False)
+
+spiderMan = Character(
+    "Spider-Man", 0,
+    "Superhuman, but with a chance of abandoning the game to fight crime.",
+    "A break from heroics", "The Avengers", 300, 0, " ", [
+        "Spider-Man: My spider senses tell me there's a... bird with a golf club... behind me. Uh... Back off, little bird.\n",
+        "Spider-Man: I'll have you all stuck to your seats in awe. *poses for the camera*\n",
+        "Spider-Man: Looks like we're about to swing into action. Aunt May, Uncle Ben, wish me luck.\n",
+        "Spider-Man: Even superheroes need a day off sometimes.\n",
+        "Spider-Man: Welcome to the Spider-Man Invitational. I could just swing from some trees and dunk the ball, but I'll go easy on you guys.\n"
+    ], [
+        "Spider-Man: My spidey senses are tingling... Uh oh, where's that ball headed?\n",
+        "Spider-Man: Fore!!\n",
+        "Spider-Man: Maybe I should go easy on these guys. It's not good for my PR to stunt on civilians. Jay Jonah Jameson's gonna trash me in the headlines.\n"
+    ], "Spider-Man: Maybe now they should call me Golfer Man.\n",
+    "Spider-Man: It's your... friendly neighborhood second placer? No no no... The Daily Bugle's gonna trash me in the headlines.\n",
+    "Spider-Man: Hmmm... I guess I can't be the hero all the time.\n", False)
+
+GLaDOS = Character(
+    "GLaDOS", 0,
+    "Able to calculate exactly how to get a hole in one, but lacks the swing power. About equal in swing strength to Spider Man's superhuman strength.",
+    "To watch mortals get frustrated when they lose at sports.", "Portal", 300,
+    0, " ", [
+        "GLaDOS: Don't worry if you miss your shot. It's not like anyone will remember your performance anyway.\n",
+        "GLaDOS: I hope you're enjoying this golf competition. It's not like you have much else to do with your meaningless existence.\n",
+        "GLaDOS: Oh, how delightful, a group of mortals wiling away their limited time on Earth. Try to actually hit the ball.\n"
+    ], [
+        "GLaDOS: It seems my capabilities extend far beyond the confines of the laboratory.\n",
+        "GLaDOS: Calculating trajectory. Executing swing sequence.\n"
+    ],
+    "GLaDOS: Congratulations, or should I say, commiserations, to my pitiful competitors. At least you got a trophy for participation.\n",
+    "GLaDOS: This outcome is... not what I anticipated. You have my deepest admiration, mortal.\n",
+    "GLaDOS: Remarkable. You've managed to defeat me at golf. It won't happen again.\n", False
+)
+
+yosemiteSam = Character(
+    "Yosemite Sam", 0,
+    "Shoots the ball with his handguns, which is actually pretty inaccurate, but sometimes he can shoot it in midair, too.",
+    "No stranger to a gold rush, Sam wants the gold from the cup to fashion himself some gold pistols too.",
+    "Looney Tunes", 250, 0, " ", [
+        "Yosemite Sam: I reckon this here green ain't big enough for the both of us!\n",
+        "Yosemite Sam: Golf club? Dagnabbit, I'll shoot my way to the cup!\n",
+        "Yosemite Sam: Saddle up! Yarharharharharhar!\n",
+        "Yosemite Sam: I'm 'bout to wrangle me a trophy today, I reckon! Yeehaw!\n"
+    ], [
+        "Yosemite Sam: Yeehaw! That ball's headin' for the hole like a bat outta Hell!\n",
+        "Yosemite Sam: Git along, little ball, git along!\n"
+        "Yosemite Sam: *BANG* *BANG* Har har, I don't need a club, this is fun!\n"
+    ], "Yosemite Sam: This ain't my first rodeo!\n",
+    "Yosemite Sam: Well, har har har. Silver, huh? I reckon I can still fashion some nice silver for my hunting rifle.\n",
+    "Yosemite Sam: What in tarnation?! Alright, whose Mr. Big Shot?! No funny business, ya hear?!\n", False
+)
 
 courses = [rollingHills, seaweedCove, hauntedMansion]
 
@@ -98,11 +240,11 @@ def selectCharacter():
         return characters[choice - 1]
       else:
         print(
-            "Invalid choice. Please enter a number corresponding to the available characters, using a number key."
+            "Invalid choice. Please enter a number corresponding to the available characters, using a number key.\n"
         )
         continue
     except ValueError:
-      print("Invalid input. Please enter a number, using a number key.")
+      print("Invalid input. Please enter a number, using a number key.\n")
       continue
 
 
@@ -115,17 +257,17 @@ displayCharacters()
 selectedUserCharacter = selectCharacter()
 
 print(
-    f"You selected {selectedUserCharacter.name}! You'll play as {selectedUserCharacter.name}."
+    f"You selected {selectedUserCharacter.name}! You'll play as {selectedUserCharacter.name}.\n"
 )
 
-print("Select who will be opponent 1.")
+print("Select who will be opponent 1.\n")
 
 selectedEnemyCharacter1 = selectCharacter()
 
 while True:
   if (selectedUserCharacter == selectedEnemyCharacter1):
     print(
-        "That character is already in use! You'll have to pick a different character"
+        "That character is already in use! You'll have to pick a different character\n"
     )
     selectedEnemyCharacter1 = selectCharacter()
     continue
@@ -133,7 +275,7 @@ while True:
     break
 
 print(
-    f"You selected {selectedEnemyCharacter1.name}! Opponent 1 will be {selectedEnemyCharacter1.name}! Now pick opponent 2!"
+    f"You selected {selectedEnemyCharacter1.name}! Opponent 1 will be {selectedEnemyCharacter1.name}! Now pick opponent 2!\n"
 )
 
 selectedEnemyCharacter2 = selectCharacter()
@@ -143,7 +285,7 @@ while True:
       == selectedEnemyCharacter1) or (selectedEnemyCharacter2
                                       == selectedUserCharacter):
     print(
-        "That character is already in use! You'll have to pick a different character"
+        "That character is already in use! You'll have to pick a different character\n"
     )
     selectedEnemyCharacter2 = selectCharacter()
     continue
@@ -153,7 +295,7 @@ while True:
 #The thirty or so lines above this are the last major revision I made to this code before going to sleep last night, April 28th 2024
 
 print(
-    f"You selected {selectedEnemyCharacter2.name}! Opponent 2 will be {selectedEnemyCharacter2.name}!"
+    f"You selected {selectedEnemyCharacter2.name}! Opponent 2 will be {selectedEnemyCharacter2.name}!\n"
 )
 
 print(
@@ -250,17 +392,18 @@ print(
 )
 # I was getting numbers like 0.040000000000000036x in the above print statement which is why I instituted the rounding function above it.
 
+
 def endingSequence(players):
   scoreNames = [
-      "Hole-in-one!", "Albatross.", "Eagle.", "Birdie.", "Par.", "Bogey.",
-      "Double Bogey...", "Triple Bogey...",
-      "Worse than Triple Bogey... Basically, really bad! But hey, at least they still won!"
+      "Hole-in-one!", "Albatross!", "Eagle!", "Birdie!", "Par!", "Bogey!",
+      "Double Bogey!", "Triple Bogey!",
+      "Their score was worse than Triple Bogey, though..."
   ]
 
   def golfScore(shots, par):
     if shots == 1:
       return scoreNames[0]
-    elif shots == par - 3:
+    elif shots <= (par - 3) and shots > 1:
       return scoreNames[1]
     elif shots == par - 2:
       return scoreNames[2]
@@ -284,29 +427,29 @@ def endingSequence(players):
     player.fancyscoreword = golfScore(player.numofshots, selectedCourse.par)
     fancyScoreWords.append(player.fancyscoreword)
 
-  # Determine the player(s) with the best score
-  best_score = min(player.numofshots
-                   for player in players)  # Find the minimum score
-  second_best_score = sorted(set(
-      player.numofshots
-      for player in players))[1]  # Find the second best score
-  third_best_score = sorted(set(player.numofshots for player in players))[2]
-  # Find the third best score
+    # Determine the player(s) with the best score
+    bestScore = min(player.numofshots
+                    for player in players)  # Find the minimum score
+    secondBestScore = sorted(set(
+        player.numofshots
+        for player in players))[1]  # Find the second best score
+    thirdBestScore = sorted(set(player.numofshots for player in players))[2]
+    # Find the third best score
 
   # The above three variables contain the numofshots attributes of the winning players, but we actually can't tell who the players even are. Below this comment is a way to make it clear who the player was who was in which place. Eg. 1st, 2nd, 3rd.
   for player in players:
-    if player.numofshots == best_score:
+    if player.numofshots == bestScore:
       bestScorePlayer = player
-    elif player.numofshots == second_best_score:
+    elif player.numofshots == secondBestScore:
       secondBestScorePlayer = player
-    elif player.numofshots == third_best_score:
+    elif player.numofshots == thirdBestScore:
       thirdBestScorePlayer = player
 
   winningPlayers = []  # Create an empty list to store the winners
 
   # Check each player's score
   for player in players:
-    if player.numofshots == best_score:  # If player's score matches the best score
+    if player.numofshots == bestScore:  # If player's score matches the best score
       winningPlayers.append(player)  # Add them to the list of winners
 
   # Check if there's a single winner or a tie
@@ -314,33 +457,61 @@ def endingSequence(players):
     print("Congratulations to the winner!")
     # Say who the single winner is and let them speak their endquote.
     print(
-        f"Player {winningPlayers[0].name} is the champion with {bestScorePlayer.numofshots} shots!"
+        f"Player {winningPlayers[0].name} is the champion with {bestScorePlayer.numofshots} shots! {bestScorePlayer.fancyscoreword}"
     )
     if winningPlayers[0].name == dickDastardly.name:
-      print(f"{dickDastardly.endquote}")
+      print(f"{dickDastardly.end1stquote}")
     elif winningPlayers[0].name == GLaDOS.name:
-      print(f"{GLaDOS.endquote}")
+      print(f"{GLaDOS.end1stquote}")
     elif winningPlayers[0].name == scoobyDoo.name:
-      print(f"{scoobyDoo.endquote}")
+      print(f"{scoobyDoo.end1stquote}")
     elif winningPlayers[0].name == spiderMan.name:
-      print(f"{spiderMan.endquote}")
+      print(f"{spiderMan.end1stquote}")
     elif winningPlayers[0].name == tweetyBird.name:
-      print(f"{tweetyBird.endquote}")
+      print(f"{tweetyBird.end1stquote}")
     elif winningPlayers[0].name == yosemiteSam.name:
-      print(f"{yosemiteSam.endquote}")
+      print(f"{yosemiteSam.end1stquote}")
 
     print(
-        f"In second place is {secondBestScorePlayer.name} with {secondBestScorePlayer.numofshots} shots."
+        f"In second place is {secondBestScorePlayer.name} with {secondBestScorePlayer.numofshots} shots. {secondBestScorePlayer.fancyscoreword}"
     )
+    if secondBestScorePlayer.name == dickDastardly.name:
+      print(f"{dickDastardly.end2ndquote}")
+    elif secondBestScorePlayer.name == GLaDOS.name:
+      print(f"{GLaDOS.end2ndquote}")
+    elif secondBestScorePlayer.name == scoobyDoo.name:
+      print(f"{scoobyDoo.end2ndquote}")
+    elif secondBestScorePlayer.name == spiderMan.name:
+      print(f"{spiderMan.end2ndquote}")
+    elif secondBestScorePlayer.name == tweetyBird.name:
+      print(f"{tweetyBird.end2ndquote}")
+    elif secondBestScorePlayer.name == yosemiteSam.name:
+      print(f"{yosemiteSam.end2ndquote}")
+
     print(
-        f"In third place is {thirdBestScorePlayer.name} with {thirdBestScorePlayer.numofshots} shots."
+        f"In third place is {thirdBestScorePlayer.name} with {thirdBestScorePlayer.numofshots} shots. {thirdBestScorePlayer.fancyscoreword}"
     )
+    if thirdBestScorePlayer.name == dickDastardly.name:
+      print(f"{dickDastardly.end3rdquote}")
+    elif thirdBestScorePlayer.name == GLaDOS.name:
+      print(f"{GLaDOS.end3rdquote}")
+    elif thirdBestScorePlayer.name == scoobyDoo.name:
+      print(f"{scoobyDoo.end3rdquote}")
+    elif thirdBestScorePlayer.name == spiderMan.name:
+      print(f"{spiderMan.end3rdquote}")
+    elif thirdBestScorePlayer.name == tweetyBird.name:
+      print(f"{tweetyBird.end3rdquote}")
+    elif thirdBestScorePlayer.name == yosemiteSam.name:
+      print(f"{yosemiteSam.end3rdquote}")
 
   else:
     print("It's a tie between:")
     for p in winningPlayers:
       print(f"Player {p.name} is tied for the win!")
-      print(f"In third place is {third_best_score}")
+    print(f"In third place is {thirdBestScore}!")
+
+  print("Announcer: The Golf Island tournament will be back next year, everybody! Stay tuned.")
+  print(f"The crowd cheers, and confetti pops above our winners. A plane spells out {bestScorePlayer.name}'s name in the sky. What a beautiful day.")
 
 
 zone1 = "zone1"
@@ -362,6 +533,12 @@ clubs = [driver, threewood, iron, wedge, putter, putterwithin10ft]
 currentClub = driver
 # Since this line is never revisited, it isn't an issue that we are seting currentClub to driver, as it will just be reassigned later.
 
+# I've been having an unfortunate problem where the necessary ceil function for rounding leads to infinite "2" shots. That is, swings with position changes of zero. If I use the floor function for rounding, I sometimes get infinite "0" shots. The solution? To implement the bottom three variables for usage in a conditional. If a shot magnitude is repeated three times, the character will switch to the opposite function, which will hopefully resolve the infinite rounding error.
+repeatThreshold = 3
+shotMagnitudeHistory = []
+repeatCount = 0
+
+
 def shotCycle(player, hole_distance):
   if player.position == hole_distance:
     # If the player has already reached the hole, ignore them
@@ -369,8 +546,7 @@ def shotCycle(player, hole_distance):
 
   # The next three conditional blocks are used to check what zone we're in and what club we're using. The reason I get that sorted before taking a swing is so that we pick the right club for the current position BEFORE swinging each time, instead of after, which wouldn't make much sense.
 
-  if player.position >= 0 and player.position <= (hole_distance *
-                                                                0.30):
+  if player.position >= 0 and player.position <= (hole_distance * 0.30):
     currentZone = zone1
   elif player.position > (hole_distance *
                           0.30) and player.position <= (hole_distance * 0.50):
@@ -379,13 +555,15 @@ def shotCycle(player, hole_distance):
                           0.50) and player.position <= (hole_distance * 0.70):
     currentZone = zone3
   elif player.position > (hole_distance *
-                        0.70) and player.position <= (hole_distance * 0.85):
+                          0.70) and player.position <= (hole_distance * 0.85):
     currentZone = zone4
-  elif player.position > (hole_distance - 10) and player.position < (hole_distance + 10):
+  elif player.position > (hole_distance -
+                          10) and player.position < (hole_distance + 10):
     currentZone = zone6
   else:
     currentZone = zone5
 
+  
   if currentZone == zone1:
     currentClub = driver
   elif currentZone == zone2:
@@ -399,9 +577,9 @@ def shotCycle(player, hole_distance):
   else:
     currentClub = putterwithin10ft
 
-  swingPowerBasedOnClub = player.swingpower # Despite the finality that this line seems to have, the variable is about to have a different value.
+  swingPowerBasedOnClub = player.swingpower  # Despite the finality that this line seems to have, the variable is about to have a different value.
   # By the way, the reason I use this variable instead of player.swingpower is that with player.swingpower it was taking the assigned multiplied value into the next loop, after which it would multiply to be even bigger the next turn, growing or shrinking exponentially.
-  
+
   if currentClub == driver:
     swingPowerBasedOnClub *= driver
   elif currentClub == threewood:
@@ -417,12 +595,15 @@ def shotCycle(player, hole_distance):
 
   # Player takes a shot
   if player == selectedUserCharacter:  # If it's the user's turn
-    while True: # Loop doesn't end until you properly input a number key
+    while True:  # Loop doesn't end until you properly input a number key
       try:
         swingMagnitude = " "
-        swingMagnitudeInput = int(input(f"Enter your shot with the number key: "))
+        swingMagnitudeInput = int(
+            input(f"Enter your shot with the number key: "))
         if 1 <= swingMagnitudeInput <= 25:
           swingMagnitude = swingMagnitudeInput * int(swingPowerBasedOnClub)
+          abs(swingMagnitude -
+              (random.randrange(1, 25) * int(swingPowerBasedOnClub)))
           break
         else:
           print("Select a number key from 1 to 25.")
@@ -433,31 +614,78 @@ def shotCycle(player, hole_distance):
   else:
     swingMagnitude = random.randrange(1, int(swingPowerBasedOnClub))
 
-  # Update player's position based on the number recieved from the randrange.
-  print(f"{player.name} just struck the ball {str(swingMagnitude)} feet!")
-  print(f"They are in {currentZone}. They've currently equipped the {currentClub}.")
+  if player.inrough == True:
+    print(f"{player.name}'s ball was in the rough, so this shot might not be ideal...")
+    swingMagnitude = int(swingMagnitude / 2)
+
+  # If the ball is in the rough, inRough will be set to true. This function isn't called until the after the ball has landed. However, if set to true, that player's property will be adjusted to player.inrough = true. swingMagnitude will be halved.
+  def isBallInRough():
+    probability = 1
+    if random.randrange(0, 25) < probability:
+      print(
+            "Uh oh! The ball fell in the rough! It's gonna be hard to get a good shot from there next turn!"
+        )
+      player.inrough = True
+
+  def randomVerb(): # This is for the sentence that gets used every time a player strikes the ball.
+    verbNum = random.randrange(1, 6)
+    if verbNum == 1:
+      verbChoice = "swatted"
+    elif verbNum == 2:
+      verbChoice = "swung"
+    elif verbNum == 3:
+      verbChoice = "struck"
+    elif verbNum == 4:
+      verbChoice = "hit"
+    elif verbNum == 5:
+      verbChoice = "thwacked"
+    elif verbNum == 6:
+      verbChoice = "knocked"
+    return verbChoice
+
+  verb = randomVerb()
+  
+  # Update player's position based on the number received from the swingMagnitude randrange.
+  print(f"{player.name} just {verb} the ball {swingMagnitude} feet.")
+  
   # Pause to simulate turn
   time.sleep(0)  # Adjust the time as needed
+  # This is mostly just here from the debugging process. It can still be used to slow down how fast the text is printed.
 
   # Save player position before the swing, so we can reference it if we sink the ball by accident
   lastSavedPlayerPosition = player.position
 
-  # Whether or not we're shooting towards the hole, adding to them sum, or shooting down towards the hole, subtracting from the total.
-  #swingMagnitudeMultiplier was defined based on the wind, that's it.
-  if (player.position < hole_distance):
-    player.position += math.ceil(swingMagnitude * swingMagnitudeMultiplier)
-  else: #  (player.position > hole_distance)
-    player.position -= math.ceil(swingMagnitude * swingMagnitudeMultiplier)
-
-  # I believe that the ceil function is being used such that it will be impossible to get the number 0 as a swing. I use ceil to have round numbers. But there was a time when I was getting infinite zero shots because the putter shots kept flooring to zero. That's why I'm not using floor.
+  # These throw an error if not accessible.
+  global repeatCount
+  global shotMagnitudeHistory
   
+  # Whether or not we're shooting towards the hole  (adding to the sum) or shooting down towards the hole (subtracting from the total).
+  #swingMagnitudeMultiplier was defined based on the wind, that's it.
+  if shotMagnitudeHistory.count(swingMagnitude) >= repeatThreshold:
+    if (player.position < hole_distance):
+      player.position += math.floor(swingMagnitude * swingMagnitudeMultiplier)
+    else:  #  (player.position > hole_distance)
+      player.position -= math.floor(swingMagnitude * swingMagnitudeMultiplier)
+    repeatCount = 0  # Reset repeated count
+    shotMagnitudeHistory = []
+
+  else:
+    if (player.position < hole_distance):
+      player.position += math.ceil(swingMagnitude * swingMagnitudeMultiplier)
+    else:  #  (player.position > hole_distance)
+      player.position -= math.ceil(swingMagnitude * swingMagnitudeMultiplier)
+    repeatCount += 1  # Increment repeat count
+
+  # Add current shot magnitude to history
+  shotMagnitudeHistory.append(swingMagnitude)
+
   # Each character's number of shots starts at 0, but after a shot, it goes up by one. If the ball goes in the lake, it still goes up by one. This is the only line of code we need to do this.
   player.numofshots += 1
 
   # Chance of ball falling in lake
   def isBallInLake():
     probability = 1
-    if random.randrange(0, 10) < probability:
+    if random.randrange(0, 25) < probability:
       print(
           "Uh oh! The ball fell in a lake! They'll have to shoot from where they were last positioned."
       )
@@ -467,17 +695,22 @@ def shotCycle(player, hole_distance):
 
   isBallInLake()
 
+  player.inrough = False
+  isBallInRough()
+
   # Check if the player has reached the hole, or print current distance from hole, or print how much they overshot it by.
   feetRemaining = hole_distance - player.position
   if feetRemaining > 0:
     print(f"{player.name} is {feetRemaining} feet away from the hole.")
   elif feetRemaining == 0:
-    print(f"{player.name} has reached the hole!")
+    print(f"{player.name} has reached the hole!\n")
   else:
-    print(f"{player.name}'s ball is {-feetRemaining} feet further than the hole! They'll need to backtrack a bit.")
+    print(
+        f"{player.name}'s ball is {-feetRemaining} feet further than the hole! They'll need to backtrack a bit."
+    )
 
   # You can trigger any necessary actions here when a player reaches the hole
-  
+
   def afterSwingSpeakChance(player):
     probability = 1
     if random.randrange(0, 10) < probability:
@@ -485,7 +718,7 @@ def shotCycle(player, hole_distance):
       print(f"{afterSwingQuote}")
     else:
       return None
-  
+
   afterSwingSpeakChance(player)
   # *this is the end of shotCycle*
 
@@ -493,6 +726,28 @@ def shotCycle(player, hole_distance):
 def gameLoop(players, hole_distance):
   allBallsInHole = False
   while not allBallsInHole:
+
+    class SpideyException(Exception):
+      pass
+
+    def spideyEnding():
+      print(
+          "Spider-Man: Uh oh... I'm getting a ring. *BZZT* *BZZT* Hello? Yes, Spider-Man speaking... There's a bank robbery? And it's the Green Goblin? I'll be there in a jiffy."
+      )
+      print(
+          "Announcer: This just in. Spider-Man is abandoning the game. He's off to fight crime. The game will have to be put on hold until he's back. Wait, he's leaving the island? Where's he going, New York? Oh my goodness. What, is he gonna swing across the ocean?"
+      )
+      raise SpideyException(
+          "\n \n SPIDER-MAN ABANDONED THE GAME TO GO FIGHT CRIME! \n J. Jonah Jameson: Darn that Spider-Man! He ruined the Golf Island Tournament! I'm gonna drag his name through the mud in the headlines tomorrow for sure!"
+      )
+
+    if spiderMan in players:
+      # Chance of ending the game due to Spider Man abandoning to go fight crime.
+      spideyProbability = 1
+      chanceOfHeroicDuties = random.randrange(0, 120)
+      if spideyProbability == chanceOfHeroicDuties:
+        spideyEnding()
+
     for player in players:
       shotCycle(player, hole_distance)
 
@@ -506,11 +761,3 @@ def gameLoop(players, hole_distance):
 
 
 gameLoop(players, selectedCourse.holedistance)
-
-# May 3rd: Notes for next time I code this.
-# Some features I still want to add are i want there to be a chance of spiderMan dropping from the roster (maybe by being deleted from the list?), i want there to be a chance of landing in the rough, and i want glados to have a chance of an auto hole in one.
-# lastly, i just need to add the 2nd and third quotes to endingSequence().
-# I may add \n to every sentence in the program.
-# Lastly, something needs to be done about the zones. Maybe instead of 4 clubs for 4 zones, there can be 10 zones with 10 clubs, or 20 zones with 20 clubs. And I may institute a variable called powerGradient, where the weak clubs aren't nerfed as bad for the weak characters, and the strong clubs aren't as overpowered for the strong characters.
-# The problem is that par should be like 7, but these characters are legitimately having 5000 shot games, which is unreasonable.
-
