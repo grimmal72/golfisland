@@ -4,6 +4,7 @@ import math
 import random
 import time
 
+# These classes and objects will be heavily utilized throughout the game. The 3 courses will belong to the Course class, and the 6 characters will belong to the Character class. I’m utilizing strings, booleans, etc, some of which will be read and updated every shotCycle(). shotCycle() will be defined much further down.
 
 class Course:
 
@@ -31,7 +32,8 @@ class Character:
 
   def __init__(self, name, numofshots, swingstats, motive, franchise,
                swingpower, position, fancyscoreword, startquote,
-               afterswingquote, end1stquote, end2ndquote, end3rdquote, inrough):
+               afterswingquote, end1stquote, end2ndquote, end3rdquote,
+               inrough):
     self.name = name
     self.numofshots = numofshots
     self.swingstats = swingstats
@@ -128,8 +130,8 @@ GLaDOS = Character(
     ],
     "GLaDOS: Congratulations, or should I say, commiserations, to my pitiful competitors. At least you got a trophy for participation.\n",
     "GLaDOS: This outcome is... not what I anticipated. You have my deepest admiration, mortal.\n",
-    "GLaDOS: Remarkable. You've managed to defeat me at golf. It won't happen again.\n", False
-)
+    "GLaDOS: Remarkable. You've managed to defeat me at golf. It won't happen again.\n",
+    False)
 
 yosemiteSam = Character(
     "Yosemite Sam", 0,
@@ -146,8 +148,8 @@ yosemiteSam = Character(
         "Yosemite Sam: *BANG* *BANG* Har har, I don't need a club, this is fun!\n"
     ], "Yosemite Sam: This ain't my first rodeo!\n",
     "Yosemite Sam: Well, har har har. Silver, huh? I reckon I can still fashion some nice silver for my hunting rifle.\n",
-    "Yosemite Sam: What in tarnation?! Alright, whose Mr. Big Shot?! No funny business, ya hear?!\n", False
-)
+    "Yosemite Sam: What in tarnation?! Alright, whose Mr. Big Shot?! No funny business, ya hear?!\n",
+    False)
 
 courses = [rollingHills, seaweedCove, hauntedMansion]
 
@@ -218,15 +220,14 @@ selectedCourse = selectCourse()
 
 print(f"You picked {selectedCourse.name}!\n")
 
+# These next two loops work the same way as the stage selection loops.
+
 
 def displayCharacters():
   for i in range(len(characters)):
     print(
         f"{i + 1}.\n{characters[i].name}.\nFranchise: {characters[i].franchise}.\nMotive: {characters[i].motive}\nSwing stats: {characters[i].swingstats}\n"
     )
-
-
-# These two loops work the same way as the stage selection loops.
 
 
 def selectCharacter():
@@ -292,8 +293,6 @@ while True:
   else:
     break
 
-#The thirty or so lines above this are the last major revision I made to this code before going to sleep last night, April 28th 2024
-
 print(
     f"You selected {selectedEnemyCharacter2.name}! Opponent 2 will be {selectedEnemyCharacter2.name}!\n"
 )
@@ -326,7 +325,7 @@ players = [
     selectedUserCharacter, selectedEnemyCharacter1, selectedEnemyCharacter2
 ]
 
-windSpeed = random.randrange(0, 25)
+windSpeed = random.randrange(1, 25)
 # According to my Googling, wind above 40mph is a gale, and 74mph is a hurricane, so I'm not going to go that high.
 
 cardinalDirections_List = [
@@ -340,8 +339,8 @@ holeDirection = selectedCourse.holedirectionfromtee
 
 # I may add in the direction that the hole points from the tee as a cardinal direction within the course objects, and then based on the wind speed it will affect the ball placement. But I'll come back to that later.
 
-if windSpeed == 0:
-  print("There's no wind! Fantastic weather for a game!\n")
+if windSpeed == 1:
+  print("There's very little wind! Fantastic weather for a game!\n")
 else:
   print(
       f"The wind is moving at {windSpeed} miles per hour, {windDirection.lower()}. The hole is {selectedCourse.holedirectionfromtee.lower()} of the tee. \n"
@@ -368,7 +367,7 @@ angle = calculateAngle(windDirection, holeDirection)
 
 # Determine swing magnitude adjustment based on angle
 if angle == 0:
-  swingAdjustment = 1  # No adjustment if wind and hole direction are the same
+  swingAdjustment = 1  # Boost if wind and hole direction are the same
 elif angle == 180 or angle == -180:
   swingAdjustment = -1  # Detract from swing if wind and hole direction are opposite
 elif abs(angle) < 90:
@@ -423,20 +422,26 @@ def endingSequence(players):
   # Initialize an empty list to store the fancyScoreWord for each player
   fancyScoreWords = []
 
+  # Get each person's fancy score word (Such as "Birdie")
   for player in players:
     player.fancyscoreword = golfScore(player.numofshots, selectedCourse.par)
     fancyScoreWords.append(player.fancyscoreword)
 
-    # Determine the player(s) with the best score
-    bestScore = min(player.numofshots
-                    for player in players)  # Find the minimum score
-    secondBestScore = sorted(set(
-        player.numofshots
-        for player in players))[1]  # Find the second best score
-    thirdBestScore = sorted(set(player.numofshots for player in players))[2]
-    # Find the third best score
+  # Sort the three players' scores from lowest to highest, which is incidentally (in golf) best to worst.
+  scores = sorted(set(player.numofshots for player in players))
+  bestScore = scores[0]
 
-  # The above three variables contain the numofshots attributes of the winning players, but we actually can't tell who the players even are. Below this comment is a way to make it clear who the player was who was in which place. Eg. 1st, 2nd, 3rd.
+  # Check for existence of second and third scores
+  if len(scores) > 1:
+    secondBestScore = scores[1]
+  else:
+    secondBestScore = None
+
+  if len(scores) > 2:
+    thirdBestScore = scores[2]
+  else:
+    thirdBestScore = None
+
   for player in players:
     if player.numofshots == bestScore:
       bestScorePlayer = player
@@ -445,64 +450,76 @@ def endingSequence(players):
     elif player.numofshots == thirdBestScore:
       thirdBestScorePlayer = player
 
-  winningPlayers = []  # Create an empty list to store the winners
+  winningPlayers = []  # Empty list to store the winners
 
-  # Check each player's score
   for player in players:
-    if player.numofshots == bestScore:  # If player's score matches the best score
-      winningPlayers.append(player)  # Add them to the list of winners
+    if player.numofshots == bestScore:  # If (and only if) player is #1
+      winningPlayers.append(
+          player)  # then add them to the first index of winningPlayers
 
-  # Check if there's a single winner or a tie
   if len(winningPlayers) == 1:
+    # Prints the champion declaration.
     print("Congratulations to the winner!")
-    # Say who the single winner is and let them speak their endquote.
     print(
-        f"Player {winningPlayers[0].name} is the champion with {bestScorePlayer.numofshots} shots! {bestScorePlayer.fancyscoreword}"
+        f"Player {winningPlayers[0].name} is the champion with {bestScore} shots! {bestScorePlayer.fancyscoreword}"
     )
-    if winningPlayers[0].name == dickDastardly.name:
-      print(f"{dickDastardly.end1stquote}")
-    elif winningPlayers[0].name == GLaDOS.name:
-      print(f"{GLaDOS.end1stquote}")
-    elif winningPlayers[0].name == scoobyDoo.name:
-      print(f"{scoobyDoo.end1stquote}")
-    elif winningPlayers[0].name == spiderMan.name:
-      print(f"{spiderMan.end1stquote}")
-    elif winningPlayers[0].name == tweetyBird.name:
-      print(f"{tweetyBird.end1stquote}")
-    elif winningPlayers[0].name == yosemiteSam.name:
-      print(f"{yosemiteSam.end1stquote}")
 
-    print(
-        f"In second place is {secondBestScorePlayer.name} with {secondBestScorePlayer.numofshots} shots. {secondBestScorePlayer.fancyscoreword}"
-    )
-    if secondBestScorePlayer.name == dickDastardly.name:
-      print(f"{dickDastardly.end2ndquote}")
-    elif secondBestScorePlayer.name == GLaDOS.name:
-      print(f"{GLaDOS.end2ndquote}")
-    elif secondBestScorePlayer.name == scoobyDoo.name:
-      print(f"{scoobyDoo.end2ndquote}")
-    elif secondBestScorePlayer.name == spiderMan.name:
-      print(f"{spiderMan.end2ndquote}")
-    elif secondBestScorePlayer.name == tweetyBird.name:
-      print(f"{tweetyBird.end2ndquote}")
-    elif secondBestScorePlayer.name == yosemiteSam.name:
-      print(f"{yosemiteSam.end2ndquote}")
+    # If people are in second and third places:
+    if secondBestScore is not None:
+      print(
+          f"In second place is {secondBestScorePlayer.name} with {secondBestScorePlayer.numofshots} shots. {secondBestScorePlayer.fancyscoreword}"
+      )
+    if thirdBestScore is not None:
+      print(
+          f"In third place is {thirdBestScorePlayer.name} with {thirdBestScorePlayer.numofshots} shots. {thirdBestScorePlayer.fancyscoreword}"
+      )
 
-    print(
-        f"In third place is {thirdBestScorePlayer.name} with {thirdBestScorePlayer.numofshots} shots. {thirdBestScorePlayer.fancyscoreword}"
-    )
-    if thirdBestScorePlayer.name == dickDastardly.name:
-      print(f"{dickDastardly.end3rdquote}")
-    elif thirdBestScorePlayer.name == GLaDOS.name:
-      print(f"{GLaDOS.end3rdquote}")
-    elif thirdBestScorePlayer.name == scoobyDoo.name:
-      print(f"{scoobyDoo.end3rdquote}")
-    elif thirdBestScorePlayer.name == spiderMan.name:
-      print(f"{spiderMan.end3rdquote}")
-    elif thirdBestScorePlayer.name == tweetyBird.name:
-      print(f"{tweetyBird.end3rdquote}")
-    elif thirdBestScorePlayer.name == yosemiteSam.name:
-      print(f"{yosemiteSam.end3rdquote}")
+  else:  # Happens if there was some kind of tie.
+    print("It's a tie between:")
+    for p in winningPlayers:
+      print(f"Player {p.name} is tied for the win!")
+    # Print 3rd place if it isn't a three-way tie but a two-way tie.
+    if thirdBestScore is not None:
+      print(f"In third place is {thirdBestScore}!")
+
+  if bestScorePlayer.name == dickDastardly.name:
+    print(f"{dickDastardly.end1stquote}")
+  elif bestScorePlayer.name == GLaDOS.name:
+    print(f"{GLaDOS.end1stquote}")
+  elif bestScorePlayer.name == scoobyDoo.name:
+    print(f"{scoobyDoo.end1stquote}")
+  elif bestScorePlayer.name == spiderMan.name:
+    print(f"{spiderMan.end1stquote}")
+  elif bestScorePlayer.name == tweetyBird.name:
+    print(f"{tweetyBird.end1stquote}")
+  elif bestScorePlayer.name == yosemiteSam.name:
+    print(f"{yosemiteSam.end1stquote}")
+
+  if secondBestScorePlayer.name == dickDastardly.name:
+    print(f"{dickDastardly.end2ndquote}")
+  elif secondBestScorePlayer.name == GLaDOS.name:
+    print(f"{GLaDOS.end2ndquote}")
+  elif secondBestScorePlayer.name == scoobyDoo.name:
+    print(f"{scoobyDoo.end2ndquote}")
+  elif secondBestScorePlayer.name == spiderMan.name:
+    print(f"{spiderMan.end2ndquote}")
+  elif secondBestScorePlayer.name == tweetyBird.name:
+    print(f"{tweetyBird.end2ndquote}")
+  elif secondBestScorePlayer.name == yosemiteSam.name:
+    print(f"{yosemiteSam.end2ndquote}")
+
+  if thirdBestScorePlayer.name == dickDastardly.name:
+    print(f"{dickDastardly.end3rdquote}")
+  elif thirdBestScorePlayer.name == GLaDOS.name:
+    print(f"{GLaDOS.end3rdquote}")
+  elif thirdBestScorePlayer.name == scoobyDoo.name:
+    print(f"{scoobyDoo.end3rdquote}")
+  elif thirdBestScorePlayer.name == spiderMan.name:
+    print(f"{spiderMan.end3rdquote}")
+  elif thirdBestScorePlayer.name == tweetyBird.name:
+    print(f"{tweetyBird.end3rdquote}")
+  elif thirdBestScorePlayer.name == yosemiteSam.name:
+    print(f"{yosemiteSam.end3rdquote}")
 
   else:
     print("It's a tie between:")
@@ -510,8 +527,12 @@ def endingSequence(players):
       print(f"Player {p.name} is tied for the win!")
     print(f"In third place is {thirdBestScore}!")
 
-  print("Announcer: The Golf Island tournament will be back next year, everybody! Stay tuned.")
-  print(f"The crowd cheers, and confetti pops above our winners. A plane spells out {bestScorePlayer.name}'s name in the sky. What a beautiful day.")
+  print(
+      "Announcer: The Golf Island tournament will be back next year, everybody! Stay tuned."
+  )
+  print(
+      f"The crowd cheers, and confetti pops above our winners. A plane spells out {bestScorePlayer.name}'s name in the sky. What a beautiful day."
+  )
 
 
 zone1 = "zone1"
@@ -563,7 +584,6 @@ def shotCycle(player, hole_distance):
   else:
     currentZone = zone5
 
-  
   if currentZone == zone1:
     currentClub = driver
   elif currentZone == zone2:
@@ -615,7 +635,9 @@ def shotCycle(player, hole_distance):
     swingMagnitude = random.randrange(1, int(swingPowerBasedOnClub))
 
   if player.inrough == True:
-    print(f"{player.name}'s ball was in the rough, so this shot might not be ideal...")
+    print(
+        f"{player.name}'s ball was in the rough, so this shot might not be ideal..."
+    )
     swingMagnitude = int(swingMagnitude / 2)
 
   # If the ball is in the rough, inRough will be set to true. This function isn't called until the after the ball has landed. However, if set to true, that player's property will be adjusted to player.inrough = true. swingMagnitude will be halved.
@@ -623,11 +645,12 @@ def shotCycle(player, hole_distance):
     probability = 1
     if random.randrange(0, 25) < probability:
       print(
-            "Uh oh! The ball fell in the rough! It's gonna be hard to get a good shot from there next turn!"
-        )
+          "Uh oh! The ball fell in the rough! It's gonna be hard to get a good shot from there next turn!"
+      )
       player.inrough = True
 
-  def randomVerb(): # This is for the sentence that gets used every time a player strikes the ball.
+  def randomVerb(
+  ):  # This is for the sentence that gets used every time a player strikes the ball.
     verbNum = random.randrange(1, 6)
     if verbNum == 1:
       verbChoice = "swatted"
@@ -644,10 +667,10 @@ def shotCycle(player, hole_distance):
     return verbChoice
 
   verb = randomVerb()
-  
+
   # Update player's position based on the number received from the swingMagnitude randrange.
   print(f"{player.name} just {verb} the ball {swingMagnitude} feet.")
-  
+
   # Pause to simulate turn
   time.sleep(0)  # Adjust the time as needed
   # This is mostly just here from the debugging process. It can still be used to slow down how fast the text is printed.
@@ -658,7 +681,7 @@ def shotCycle(player, hole_distance):
   # These throw an error if not accessible.
   global repeatCount
   global shotMagnitudeHistory
-  
+
   # Whether or not we're shooting towards the hole  (adding to the sum) or shooting down towards the hole (subtracting from the total).
   #swingMagnitudeMultiplier was defined based on the wind, that's it.
   if shotMagnitudeHistory.count(swingMagnitude) >= repeatThreshold:
@@ -709,8 +732,7 @@ def shotCycle(player, hole_distance):
         f"{player.name}'s ball is {-feetRemaining} feet further than the hole! They'll need to backtrack a bit."
     )
 
-  # You can trigger any necessary actions here when a player reaches the hole
-
+  # This is the function that makes it so that the player sometimes speaks after hitting the ball.
   def afterSwingSpeakChance(player):
     probability = 1
     if random.randrange(0, 10) < probability:
@@ -761,3 +783,5 @@ def gameLoop(players, hole_distance):
 
 
 gameLoop(players, selectedCourse.holedistance)
+
+# Note: I'm happy with how this turned out. The only thing I want there to be is a restart game option at the ending screen, but it's fine.
